@@ -16,9 +16,24 @@
 </head>
 
 <body>
-    <main>
+    <div class="modal_overlay js-overlayScreen">
+        <aside class="modal">
+            <form class="form js-startForm" action="">
+                <label for="msg">Mensagem</label>
+                <input class="js-msgInput" id="msg" name="msg" type="text">
+                <label for="loc">
+                    <input class="js-locCheck" type="checkbox" name="loc" id="loc">
+                    Mostrar temperatura e localização
+                </label>
+                <button>Começar</button>
+            </form>
+        </aside>
+    </div>
+
+
+    <main class="js-mainContent -hidden">
         <div class="msg">
-            <h1>Bem-vindos ao minimercado - O Loriguense</h1>
+            <h1 class="js-message"></h1>
         </div>
         <div class="news js-news"></div>
         <div class="temp-news">
