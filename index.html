@@ -12,23 +12,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Proza+Libre:wght@700&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="minireset.min.css" />
+
     <link rel="stylesheet" href="styles.css?v=1" />
 </head>
 
 <body>
     <div class="modal_overlay js-overlayScreen">
-        <aside class="modal">
-            <form class="form js-startForm" action="">
+        <aside class="modal js-formModal">
+            <form class="form js-startForm">
                 <label for="msg">Mensagem</label>
                 <input class="js-msgInput" id="msg" name="msg" type="text">
                 <label for="loc">
                     <input class="js-locCheck" type="checkbox" name="loc" id="loc">
                     Mostrar temperatura e localização
                 </label>
-                <button>Começar</button>
+                <button class="js-formBtn">Começar</button>
             </form>
+
+            <img class="loading_icon js-loadingIcon -hidden" src="images/loading_icon.svg">
         </aside>
+    
+        <div class="error_message js-errorModal -hidden">
+            <p>Erro:</p>
+            <p class="js-errorMsg"></p>
+            <p>A temperatura e localização não serão mostradas.</p>
+            <button class="js-errorBtn">OK</button>
+        </div>
     </div>
+
+
 
 
     <main class="js-mainContent -hidden">

@@ -64,8 +64,7 @@ var news = {
   slider: function () {
     // var self = this;
     // self.loaded = true;
-    form.elements.$startScreen.addClass('-hidden');
-    $('.js-mainContent').show();
+
     var newsLength = $(".js-news").find(".news__article").length;
     var idxAtual = 0;
     var idxNext;
@@ -117,6 +116,8 @@ var temperature = {
                     )}ºC</p>
                     <p class="temperature__city">${result.name}</p>
                 `);
+
+        goToMainScreen();
       },
     });
   },
@@ -168,52 +169,77 @@ var date = {
 var form = {
   elements: {
     $checkbox: $(".js-locCheck"),
+    $formModal: $(".js-formModal"),
     $form: $(".js-startForm"),
     $msgInput: $(".js-msgInput"),
     $displayMessage: $(".js-message"),
-    $startScreen: $('.js-overlayScreen')
+    $startScreen: $(".js-overlayScreen"),
+    $button: $(".js-formBtn"),
+    $errorModal: $(".js-errorModal"),
+    $errorMsg: $(".js-errorMsg"),
+    $errorBtn: $(".js-errorBtn"),
   },
   data: {
     msg: "",
   },
-  getLocation: function () {
-    var self = this;
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(self.storeCoords);
-    } else {
-      //browser nao suporta a location api
-      alert("nao suporta");
-    }
-  },
-  storeCoords: function (position) {
+  successLoc: function (position) {
     temperature.lat = position.coords.latitude;
     temperature.long = position.coords.longitude;
+    temperature.init();
+  },
+  errorLoc: function (error) {
+    loading.change();
+    form.elements.$errorMsg.html(error.message);
+    form.elements.$errorModal.removeClass("-hidden");
   },
   init: function () {
     var self = this;
 
+    news.init();
+    self.elements.$form.addClass("-hidden");
+    loading.change();
+
+    //mensagem
     self.data.msg = self.elements.$msgInput.val().trim();
     if (self.data.msg !== "") {
       self.elements.$displayMessage.html(self.data.msg);
     }
 
+    //localizaçao e temperatura
     var isChecked = self.elements.$checkbox.is(":checked");
     if (isChecked) {
-      temperature.init();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          self.successLoc,
+          self.errorLoc
+        );
+      } else {
+        //browser nao suporta a api
+      }
+    } else {
+      goToMainScreen();
     }
-
-    news.init();
   },
 };
 
-form.elements.$checkbox.on("change", function () {
-  if (this.checked) {
-    form.getLocation();
-  }
-});
+var loading = {
+  $icon: $(".js-loadingIcon"),
+  change: function () {
+    var self = this;
+    self.$icon.toggleClass("-hidden");
+  },
+};
+
+function goToMainScreen() {
+  $(".js-mainContent").show();
+  form.elements.$startScreen.addClass("-hidden");
+}
 
 form.elements.$form.on("submit", function (e) {
   e.preventDefault();
-
   form.init();
+});
+
+form.elements.$errorBtn.on("click", function () {
+  goToMainScreen();
 });
