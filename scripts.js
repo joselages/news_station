@@ -15,6 +15,10 @@ var news = {
   getNews: function () {
     var self = this;
 
+    $(".js-news").empty();
+    $(".js-tempNews").css("top", "-33.3%").empty();
+    self.news = "";
+
     $.ajax(self.RSS_URL, {
       accepts: {
         xml: "application/rss+xml",
@@ -22,7 +26,8 @@ var news = {
       dataType: "xml",
       success: function (data) {
         self.news = data;
-        console.log(self.news);
+        //.log(self.news);
+
         $(self.news)
           .find("item")
           .each(function (idx) {
@@ -65,6 +70,9 @@ var news = {
     // var self = this;
     // self.loaded = true;
 
+    goToMainScreen();
+    loading.hide();
+
     var newsLength = $(".js-news").find(".news__article").length;
     var idxAtual = 0;
     var idxNext;
@@ -72,8 +80,11 @@ var news = {
     var interval = setInterval(function () {
       idxNext = idxAtual + 1;
       if (newsLength - 1 === idxAtual) {
-        console.log("acabou");
+        //acabou
         clearInterval(interval);
+        loading.show();
+        showModalScreen();
+        news.getNews();
         return;
       } else {
         //main news
@@ -84,7 +95,7 @@ var news = {
         $(".js-tempNews").css("top", 33.3 * (idxNext + 1) * -1 + "%");
       }
       idxAtual++;
-    }, 25000);
+    }, 500);
   },
   init: function () {
     var self = this;
@@ -188,8 +199,9 @@ var form = {
     temperature.init();
   },
   errorLoc: function (error) {
-    loading.change();
+    loading.hide();
     form.elements.$errorMsg.html(error.message);
+    console.error(error.message);
     form.elements.$errorModal.removeClass("-hidden");
   },
   init: function () {
@@ -197,7 +209,7 @@ var form = {
 
     news.init();
     self.elements.$form.addClass("-hidden");
-    loading.change();
+    loading.show();
 
     //mensagem
     self.data.msg = self.elements.$msgInput.val().trim();
@@ -214,7 +226,9 @@ var form = {
           self.errorLoc
         );
       } else {
-        //browser nao suporta a api
+        self.errorLoc({
+          error: "O seu browser não suporta a partilha de localização",
+        });
       }
     } else {
       goToMainScreen();
@@ -228,11 +242,24 @@ var loading = {
     var self = this;
     self.$icon.toggleClass("-hidden");
   },
+  hide:function(){
+    var self = this;
+    self.$icon.removeClass("-hidden");
+  },
+  show:function(){
+    var self = this;
+    self.$icon.addClass("-hidden");
+  }
 };
 
 function goToMainScreen() {
   $(".js-mainContent").show();
   form.elements.$startScreen.addClass("-hidden");
+}
+
+function showModalScreen(){
+  $(".js-mainContent").hide();
+  form.elements.$startScreen.removeClass("-hidden");
 }
 
 form.elements.$form.on("submit", function (e) {
