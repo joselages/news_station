@@ -11,7 +11,7 @@ $(document).ready(function () {
 var news = {
   RSS_URL: "http://feeds.jn.pt/JN-Ultimas",
   news: "",
-  loaded: false,
+  reload: false,
   getNews: function () {
     var self = this;
 
@@ -19,68 +19,54 @@ var news = {
     $(".js-tempNews").css("top", "-33.3%").empty();
     self.news = "";
 
-    $.ajax(self.RSS_URL, {
-      accepts: {
-        xml: "application/rss+xml",
-      },
-      dataType: "xml",
-      success: function (data) {
-        self.news = data;
-        //.log(self.news);
+    fetch(
+      `https://api.rss2json.com/v1/api.json?rss_url=${self.RSS_URL}&api_key=${config.RSS_CONVERTER_API_KEY}&count=40`
+    )
+      .then((response) => response.json())
+      .then((data) => self.populate(data))
+      .then(self.slider());
+  },
+  populate: function (data) {
+    var self = this;
+    self.news = data;
 
-        $(self.news)
-          .find("item")
-          .each(function (idx) {
-            const el = $(this);
-            var mainTemplate = `
-                            <article class="news__article${
-                              idx === 0 ? " -first" : ""
-                            }">
-                                <h2 class="article__title">${el
-                                  .find("title")
-                                  .text()}</h2>
-                                <p class="article__txt">${el
-                                  .find("description")
-                                  .text()}</p>
-                                <small class="article__small">${el
-                                  .find("pubDate")
-                                  .text()}</small>
-                            </article>
-                        `;
+    self.news.items.forEach(function (el, idx) {
+      if (el !== "") {
+        var mainTemplate = `
+        <article class="news__article${idx === 0 ? " -first" : ""}">
+            <h2 class="article__title">${el.title}</h2>
+            <p class="article__txt">${el.description}</p>
+            <small class="article__small">${el.pubDate}</small>
+        </article>`;
 
-            var tempTemplate = `
-                            <div class="temp-news__container">
-                                <h3 class="temp-news__title">${el
-                                  .find("title")
-                                  .text()}</h3>
-                            </div>
-                        `;
+        var tempTemplate = `
+        <div class="temp-news__container">
+            <h3 class="temp-news__title">${el.title}</h3>
+        </div>`;
 
-            mainTemplate = mainTemplate.split(/<img.+alt=""\/>/).join("");
+        mainTemplate = $.parseHTML(mainTemplate);
+        $(mainTemplate).find("img").remove();
 
-            $(".js-news").append(mainTemplate);
-            $(".js-tempNews").append(tempTemplate);
-          })
-          .promise()
-          .done(self.slider());
-      },
+        $(".js-news").append(mainTemplate);
+        $(".js-tempNews").append(tempTemplate);
+      }
     });
   },
   slider: function () {
-    // var self = this;
-    // self.loaded = true;
-
-    goToMainScreen();
-    loading.hide();
-
     var newsLength = $(".js-news").find(".news__article").length;
     var idxAtual = 0;
     var idxNext;
 
+    if (self.reload) {
+      setTimeout(function () {
+        goToMainScreen();
+      }, 25000);
+    }
+
     var interval = setInterval(function () {
       idxNext = idxAtual + 1;
-      if (newsLength - 1 === idxAtual) {
-        //acabou
+      if (2 === idxAtual) {
+        self.reload = true;
         clearInterval(interval);
         loading.show();
         showModalScreen();
@@ -90,16 +76,13 @@ var news = {
         //main news
         $(".news__article").eq(idxAtual).css("left", "-100%");
         $(".news__article").eq(idxNext).css("left", "0");
-
-        //
         $(".js-tempNews").css("top", 33.3 * (idxNext + 1) * -1 + "%");
       }
       idxAtual++;
-    }, 500);
+    }, 25000);
   },
   init: function () {
     var self = this;
-
     self.getNews();
   },
 };
@@ -208,7 +191,8 @@ var form = {
     var self = this;
 
     news.init();
-    self.elements.$form.addClass("-hidden");
+
+    self.elements.$formModal.addClass("-hidden");
     loading.show();
 
     //mensagem
@@ -219,6 +203,7 @@ var form = {
 
     //localizaçao e temperatura
     var isChecked = self.elements.$checkbox.is(":checked");
+
     if (isChecked) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -242,14 +227,14 @@ var loading = {
     var self = this;
     self.$icon.toggleClass("-hidden");
   },
-  hide:function(){
+  hide: function () {
+    var self = this;
+    self.$icon.addClass("-hidden");
+  },
+  show: function () {
     var self = this;
     self.$icon.removeClass("-hidden");
   },
-  show:function(){
-    var self = this;
-    self.$icon.addClass("-hidden");
-  }
 };
 
 function goToMainScreen() {
@@ -257,7 +242,7 @@ function goToMainScreen() {
   form.elements.$startScreen.addClass("-hidden");
 }
 
-function showModalScreen(){
+function showModalScreen() {
   $(".js-mainContent").hide();
   form.elements.$startScreen.removeClass("-hidden");
 }
