@@ -16,11 +16,11 @@ var news = {
     var self = this;
 
     $(".js-news").empty();
-    $(".js-tempNews").css("top", "-33.3%").empty();
+    $(".js-tempNews").css("top", "-33.35%").empty();
     self.news = "";
 
     fetch(
-      `https://api.rss2json.com/v1/api.json?rss_url=${self.RSS_URL}&api_key=${config.RSS_CONVERTER_API_KEY}&count=40`
+      `https://api.rss2json.com/v1/api.json?rss_url=${self.RSS_URL}&api_key=${config.RSS_CONVERTER_API_KEY}&count=30`
     )
       .then((response) => response.json())
       .then((data) => self.populate(data))
@@ -33,7 +33,7 @@ var news = {
     self.news.items.forEach(function (el, idx) {
       if (el !== "") {
         var mainTemplate = `
-        <article class="news__article${idx === 0 ? " -first" : ""}">
+        <article class="news__article ${idx === 0 ? "-first" : ""}">
             <h2 class="article__title">${el.title}</h2>
             <p class="article__txt">${el.description}</p>
             <small class="article__small">${el.pubDate}</small>
@@ -65,7 +65,7 @@ var news = {
 
     var interval = setInterval(function () {
       idxNext = idxAtual + 1;
-      if (2 === idxAtual) {
+      if (newsLength -1 === idxAtual) {
         self.reload = true;
         clearInterval(interval);
         loading.show();
@@ -76,7 +76,7 @@ var news = {
         //main news
         $(".news__article").eq(idxAtual).css("left", "-100%");
         $(".news__article").eq(idxNext).css("left", "0");
-        $(".js-tempNews").css("top", 33.3 * (idxNext + 1) * -1 + "%");
+        $(".js-tempNews").css("top", 33.35 * (idxNext + 1) * -1 + "%");
       }
       idxAtual++;
     }, 25000);
