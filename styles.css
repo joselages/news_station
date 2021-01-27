@@ -97,7 +97,7 @@ body {
   display: flex;
   flex-direction: column;
 
-  padding: 40px;
+  padding: 40px 0 0 0;
   background: rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(5px);
@@ -113,39 +113,119 @@ body {
 }
 
 .form_label {
+  margin: 0 2rem;
   font-size: 1em;
   margin-bottom: 0.25rem;
 }
 
 .form_input {
-  padding: 0.5rem;
+  margin: 0 2rem;
+  padding: 0.75rem;
   font-size: 1.25em;
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 3px;
+  color:white;
+}
+
+.form_input:focus {
+  outline:none;
+  box-shadow: 0 0 .5rem white;
 }
 
 .checkbox_wrapper {
+  margin: 0.5rem 2rem;
   display: flex;
   flex-direction: row;
-  align-items: baseline;
-  margin: .5rem 0;
-  cursor:pointer;
+  align-items: center;
+  cursor: pointer;
 }
 
-.control-me {
-  font-size: 1.5rem;
-  transform-origin: 50% 60%;
-  transition: transform 0.25s;
+/* custom checkbox hack - https://css-tricks.com/the-checkbox-hack/*/
+
+.custom-checkbox {
+  width: 40px;
+  height: 40px;
+  margin-left: 0.5rem;
+  background: rgba(255, 255, 255, 0.35);
+  display: grid;
+  place-items: center;
+  border-radius: 100%;
+  opacity:.65;
   transform: rotate(0);
-  margin-left: .5rem;
-  padding:.5rem;
-  border: 1px solid white;
+  transition: all 0.25s;
 }
 
-.form_checkbox:checked ~ .control-me {
-  transform: rotate(-180deg);
+.custom-checkbox_icon {
+  font-size: 1.25em;
 }
+
+.checkbox_wrapper:hover >  .custom-checkbox{
+  opacity: 1;
+}
+
+.form_checkbox:checked ~ .custom-checkbox {
+  transform: rotate(-180deg) ;
+}
+
+.form_btn {
+  padding: 1rem;
+  background-image: radial-gradient(
+    farthest-corner at 0% 100%,
+    rgb(128 2 2),
+    #e83e3e
+  );
+  filter: drop-shadow(0 0 5px rgba(232, 62, 62, 0.5));
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
+  border: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: var(--bold);
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.13);
+  font-size: 1.25em;
+  cursor: pointer;
+  border-radius: 0 0 10px 10px;
+  transition: all .2s ease;
+}
+
+.form_btn:hover{
+  text-shadow: 0 3px 4px  rgba(0, 0, 0, 0.13);
+  filter: drop-shadow(0 0 10px rgba(232, 62, 62, 0.5));
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
+}
+
 
 .loading_icon {
   animation: rotate 3s linear infinite;
+}
+
+.error_title{
+  font-size: 2em;
+  font-weight: var(--bold);
+  text-align: center;
+  margin-bottom: 2rem;
+
+}
+
+.error_message_wrap{
+  background:white;
+  border-radius: 5px;
+  padding:.75rem;
+  margin:.5rem 2rem 
+}
+
+.error_message{
+  color:rgb(74 2 2);
+}
+
+.error_message::before{
+  content:"⚠ ";
+  font-size:1.25em;
+}
+
+.error_default{
+  margin:1rem 2rem 
 }
 
 @keyframes rotate {
@@ -173,6 +253,11 @@ main {
   font-weight: var(--bold);
   font-size: 4em;
   margin: 1rem 3rem;
+  /*truncated text - https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/*/
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .news {
@@ -188,6 +273,10 @@ main {
   border-radius: 10px;
   grid-column: 1/4;
   grid-row: 2/4;
+}
+
+.news.-full_height{
+  grid-row: 1/4;
 }
 
 .temp-news {

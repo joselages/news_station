@@ -1,5 +1,6 @@
 $(document).ready(function () {
   date.getDate();
+  news.init();
   setInterval(function () {
     date.getDate();
   }, 1000);
@@ -23,12 +24,19 @@ var news = {
       `https://api.rss2json.com/v1/api.json?rss_url=${self.RSS_URL}&api_key=${config.RSS_CONVERTER_API_KEY}&count=30`
     )
       .then((response) => response.json())
-      .then((data) => self.populate(data))
-      .then(self.slider());
+      .then((data) => self.populate(data));
   },
   populate: function (data) {
     var self = this;
     self.news = data;
+
+    if (self.reload) {
+      setTimeout(function () {
+        console.log("aqui2");
+        self.slider();
+        goToMainScreen();
+      },1000);
+    }
 
     self.news.items.forEach(function (el, idx) {
       if (el !== "") {
@@ -53,24 +61,23 @@ var news = {
     });
   },
   slider: function () {
+    var self = this;
     var newsLength = $(".js-news").find(".news__article").length;
     var idxAtual = 0;
     var idxNext;
 
-    if (self.reload) {
-      setTimeout(function () {
-        goToMainScreen();
-      }, 25000);
-    }
+    console.log("slider");
 
     var interval = setInterval(function () {
       idxNext = idxAtual + 1;
-      if (newsLength -1 === idxAtual) {
+      if (newsLength - 1 === idxAtual) {
         self.reload = true;
-        clearInterval(interval);
+
         loading.show();
         showModalScreen();
         news.getNews();
+        clearInterval(interval);
+        console.log("aqui1");
         return;
       } else {
         //main news
@@ -110,7 +117,7 @@ var temperature = {
                     )}ºC</p>
                     <p class="temperature__city">${result.name}</p>
                 `);
-
+        news.slider();
         goToMainScreen();
       },
     });
@@ -190,8 +197,6 @@ var form = {
   init: function () {
     var self = this;
 
-    news.init();
-
     self.elements.$formModal.addClass("-hidden");
     loading.show();
 
@@ -199,6 +204,8 @@ var form = {
     self.data.msg = self.elements.$msgInput.val().trim();
     if (self.data.msg !== "") {
       self.elements.$displayMessage.html(self.data.msg);
+    } else {
+      $(".js-news").addClass("-full_height");
     }
 
     //localizaçao e temperatura
@@ -216,6 +223,7 @@ var form = {
         });
       }
     } else {
+      news.slider();
       goToMainScreen();
     }
   },
@@ -253,5 +261,6 @@ form.elements.$form.on("submit", function (e) {
 });
 
 form.elements.$errorBtn.on("click", function () {
+  news.slider();
   goToMainScreen();
 });

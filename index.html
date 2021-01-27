@@ -23,9 +23,10 @@
                 <label class="form_label" for="msg">Mensagem</label>
                 <input class="form_input js-msgInput" id="msg" name="msg" type="text">
                 <label class="checkbox_wrapper" for="loc">
-                    Quer mostrar temperatura e localização?
-                    <input class="form_checkbox visually-hidden js-locCheck" type="checkbox" checked name="loc" id="loc">
-                    <span class="control-me">👎</span>
+                    Mostrar temperatura e localização?
+                    <input class="form_checkbox visually-hidden js-locCheck" type="checkbox" checked name="loc"
+                        id="loc">
+                    <span class="custom-checkbox"><span class="custom-checkbox_icon">👎</span></span>
                 </label>
 
                 <button class="js-formBtn form_btn">Começar</button>
@@ -35,11 +36,14 @@
         <img class="loading_icon js-loadingIcon -hidden" src="images/loading_icon.svg">
 
 
-        <div class="modal error_message js-errorModal -hidden">
-            <p>Erro:</p>
-            <p class="js-errorMsg"></p>
-            <p>A temperatura e localização não serão mostradas.</p>
-            <button class="js-errorBtn">OK</button>
+        <div class="modal error_modal js-errorModal -hidden">
+            <h2 class="error_title">Oops...</h2>
+            <div class="error_message_wrap">
+                <p class="error_message js-errorMsg"></p>
+            </div>
+
+            <p class="error_default">A temperatura e localização não serão mostradas.</p>
+            <button class="js-errorBtn form_btn">Got it!</button>
         </div>
     </div>
 
