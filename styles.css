@@ -126,14 +126,22 @@ body {
   border: 1px solid white;
   border-radius: 3px;
   color:white;
+
+  transition: box-shadow .5s ease;
 }
 
-.form_input:focus {
+.form_input::placeholder {
+color:white;
+opacity: .25;
+}
+
+.form_input:focus,
+.form_input:hover{
   outline:none;
-  box-shadow: 0 0 .5rem white;
+  box-shadow: 0 0 .5rem 1px white;
 }
 
-.checkbox_wrapper {
+.checkbox_wrapper, .radio_container {
   margin: 0.5rem 2rem;
   display: flex;
   flex-direction: row;
@@ -151,22 +159,119 @@ body {
   display: grid;
   place-items: center;
   border-radius: 100%;
-  opacity:.65;
   transform: rotate(0);
-  transition: all 0.25s;
+  opacity: 0.45;
+    transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity .5s linear, box-shadow .5s ease;
 }
 
 .custom-checkbox_icon {
   font-size: 1.25em;
 }
 
-.checkbox_wrapper:hover >  .custom-checkbox{
+.checkbox_wrapper:hover >  .custom-checkbox,
+.form_checkbox:focus ~ .custom-checkbox
+{
+  box-shadow: 0 0 .5rem 1px white;
+  opacity: 1;
+}
+
+.form_checkbox:focus ~ .custom-checkbox
+{
+  box-shadow: 0 0 .5rem 1px white;
   opacity: 1;
 }
 
 .form_checkbox:checked ~ .custom-checkbox {
   transform: rotate(-180deg) ;
+  opacity: 1;
+ 
 }
+
+
+/*RADIO*/
+.radio_label{
+margin-left: 2rem;
+}
+.radio_container{
+  justify-content: space-between;
+}
+
+.radio_wrapper{
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-direction: row-reverse;
+  flex:1;
+  padding:.5rem;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  border-radius:5px;
+  overflow: hidden;
+  opacity: .5;
+  transition: all .25s ease;
+}
+
+.radio_wrapper:first-of-type{
+margin-right: .5rem;
+}
+
+.radio_wrapper:hover,
+.radio_wrapper.-focused{
+  box-shadow: 0 0 .5rem white;
+  opacity: 1;
+}
+
+/**since there's not a parent selector on css, i have to addClass here to make it "selected"*/
+
+.radio_wrapper.-checked{
+  opacity: 1;
+}
+
+
+
+.custom-radio_icon{
+  font-size: 1.5em;
+  display: inline-block;
+  transform: translateY(0);
+  transition: all .25s ease;
+}
+
+.custom-radio_icon::before{
+  content:"✊";
+  display: inline-block;
+  width:30px;
+  transform: translateY(15px);
+  opacity: .35;
+  transition: all .35s ease;
+}
+
+.form_radio:checked ~ .custom-radio>.custom-radio_icon::before {
+  content:"☝️";
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.seconds_label{
+  margin: 1rem 2rem;
+  opacity:1;
+  transform: translateX(0);
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+.form_input.-seconds{
+  font-size: 1em;
+  width:45px;
+  height: 40px;
+  margin:0;
+}
+
+.seconds_label.-inactive{
+  opacity:0;
+  transform: translateX(-10px);
+  pointer-events: none;
+
+}
+
 
 .form_btn {
   padding: 1rem;
@@ -289,16 +394,17 @@ main {
 
   margin: 1rem;
   overflow-y: hidden;
+  overflow-x: visible;
   position: relative;
 }
 
 .temp-news__wrap {
   position: relative;
-  top: -33.3%;
+  top: -33.33333333333333%;
   width: 100%;
   height: 100%;
   display: grid;
-  grid-auto-rows: 33.3%;
+  grid-auto-rows: 33.33333333333333%;
 
   transition: all 1s ease;
 }
@@ -398,4 +504,15 @@ main {
   position: absolute;
   width: 1px;
   white-space: nowrap;
+}
+
+
+@media only screen and (max-width: 1150px) {
+  .temp-news {
+   display: none;
+  }
+
+  .news{
+    grid-column: 1/5;
+  }
 }

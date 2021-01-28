@@ -17,7 +17,7 @@ var news = {
     var self = this;
 
     $(".js-news").empty();
-    $(".js-tempNews").css("top", "-33.35%").empty();
+    $(".js-tempNews").css("top", "-33.33333333333333%").empty();
     self.news = "";
 
     fetch(
@@ -83,7 +83,7 @@ var news = {
         //main news
         $(".news__article").eq(idxAtual).css("left", "-100%");
         $(".news__article").eq(idxNext).css("left", "0");
-        $(".js-tempNews").css("top", 33.35 * (idxNext + 1) * -1 + "%");
+        $(".js-tempNews").css("top", 33.33333333333333 * (idxNext + 1) * -1 + "%");
       }
       idxAtual++;
     }, 25000);
@@ -111,6 +111,7 @@ var temperature = {
     $.ajax({
       url: weatherApiUrl,
       success: function (result) {
+        console.log(result);
         $(".js-temperature").append(`
                     <p class="temperature__degrees">${parseInt(
                       result.main.temp
@@ -179,6 +180,10 @@ var form = {
     $errorModal: $(".js-errorModal"),
     $errorMsg: $(".js-errorMsg"),
     $errorBtn: $(".js-errorBtn"),
+    $fakeRadioBtn: $('.js-fakeRadioBtn'),
+    $realRadioBtn: $('.js-radioBtn'),
+    $secondsSentence: $('.js-secondsLabel'),
+    $secondsInput:$('.js-secondsInput')
   },
   data: {
     msg: "",
@@ -264,3 +269,25 @@ form.elements.$errorBtn.on("click", function () {
   news.slider();
   goToMainScreen();
 });
+
+
+form.elements.$fakeRadioBtn.on('click',function(){
+  $(this).addClass('-checked');
+  form.elements.$fakeRadioBtn.not($(this)).removeClass('-checked');
+
+  if($(this).attr('value') === 'slider'){
+    form.elements.$secondsSentence.removeClass('-inactive');
+    form.elements.$secondsInput.prop('disabled',false);
+    console.log('slider')
+  } else {
+    form.elements.$secondsSentence.addClass('-inactive');
+    form.elements.$secondsInput.prop('disabled',true);
+    console.log('scroll')
+  }
+});
+
+form.elements.$realRadioBtn.on('focus',function(){
+  form.elements.$realRadioBtn.parent().addClass('-focused');
+  form.elements.$realRadioBtn.not($(this)).parent().removeClass('-focused');
+});
+
