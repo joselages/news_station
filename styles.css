@@ -8,6 +8,25 @@ https://glassmorphism.com/
 :root {
   --bold: 700;
   --normal: 400;
+
+  --thumbBG: rgba(255, 255, 255, 0.85);
+  --scrollbarBG: trasparent;
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+*::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+  margin: 2px;
 }
 
 html,
@@ -125,23 +144,24 @@ body {
   background-color: transparent;
   border: 1px solid white;
   border-radius: 3px;
-  color:white;
+  color: white;
 
-  transition: box-shadow .5s ease;
+  transition: box-shadow 0.5s ease;
 }
 
 .form_input::placeholder {
-color:white;
-opacity: .25;
+  color: white;
+  opacity: 0.25;
 }
 
 .form_input:focus,
-.form_input:hover{
-  outline:none;
-  box-shadow: 0 0 .5rem 1px white;
+.form_input:hover {
+  outline: none;
+  box-shadow: 0 0 0.5rem 1px white;
 }
 
-.checkbox_wrapper, .radio_container {
+.checkbox_wrapper,
+.radio_container {
   margin: 0.5rem 2rem;
   display: flex;
   flex-direction: row;
@@ -161,117 +181,110 @@ opacity: .25;
   border-radius: 100%;
   transform: rotate(0);
   opacity: 0.45;
-    transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity .5s linear, box-shadow .5s ease;
+  transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6),
+    opacity 0.5s linear, box-shadow 0.5s ease;
 }
 
 .custom-checkbox_icon {
   font-size: 1.25em;
 }
 
-.checkbox_wrapper:hover >  .custom-checkbox,
-.form_checkbox:focus ~ .custom-checkbox
-{
-  box-shadow: 0 0 .5rem 1px white;
+.checkbox_wrapper:hover > .custom-checkbox,
+.form_checkbox:focus ~ .custom-checkbox {
+  box-shadow: 0 0 0.5rem 1px white;
   opacity: 1;
 }
 
-.form_checkbox:focus ~ .custom-checkbox
-{
-  box-shadow: 0 0 .5rem 1px white;
+.form_checkbox:focus ~ .custom-checkbox {
+  box-shadow: 0 0 0.5rem 1px white;
   opacity: 1;
 }
 
 .form_checkbox:checked ~ .custom-checkbox {
-  transform: rotate(-180deg) ;
+  transform: rotate(-180deg);
   opacity: 1;
- 
 }
-
 
 /*RADIO*/
-.radio_label{
-margin-left: 2rem;
+.radio_label {
+  margin-left: 2rem;
 }
-.radio_container{
+.radio_container {
   justify-content: space-between;
 }
 
-.radio_wrapper{
+.radio_wrapper {
   display: flex;
   align-items: baseline;
   justify-content: center;
   flex-direction: row-reverse;
-  flex:1;
-  padding:.5rem;
+  flex: 1;
+  padding: 0.5rem;
   background: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  border-radius:5px;
+  border-radius: 5px;
   overflow: hidden;
-  opacity: .5;
-  transition: all .25s ease;
+  opacity: 0.5;
+  transition: all 0.25s ease;
 }
 
-.radio_wrapper:first-of-type{
-margin-right: .5rem;
+.radio_wrapper:first-of-type {
+  margin-right: 0.5rem;
 }
 
 .radio_wrapper:hover,
-.radio_wrapper.-focused{
-  box-shadow: 0 0 .5rem white;
+.radio_wrapper.-focused {
+  box-shadow: 0 0 0.5rem white;
   opacity: 1;
 }
 
 /**since there's not a parent selector on css, i have to addClass here to make it "selected"*/
 
-.radio_wrapper.-checked{
+.radio_wrapper.-checked {
   opacity: 1;
 }
 
-
-
-.custom-radio_icon{
+.custom-radio_icon {
   font-size: 1.5em;
   display: inline-block;
   transform: translateY(0);
-  transition: all .25s ease;
+  transition: all 0.25s ease;
 }
 
-.custom-radio_icon::before{
-  content:"✊";
+.custom-radio_icon::before {
+  content: "✊";
   display: inline-block;
-  width:30px;
+  width: 30px;
   transform: translateY(15px);
-  opacity: .35;
-  transition: all .35s ease;
+  opacity: 0.35;
+  transition: all 0.35s ease;
 }
 
-.form_radio:checked ~ .custom-radio>.custom-radio_icon::before {
-  content:"☝️";
+.form_radio:checked ~ .custom-radio > .custom-radio_icon::before {
+  content: "☝️";
   transform: translateY(0);
   opacity: 1;
 }
 
-.seconds_label{
+.seconds_label {
   margin: 1rem 2rem;
-  opacity:1;
+  opacity: 1;
   transform: translateX(0);
-  transition: transform .25s ease, opacity .25s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.form_input.-seconds{
+.form_input.-seconds {
   font-size: 1em;
-  width:45px;
+  width: 45px;
   height: 40px;
-  margin:0;
+  margin: 0;
 }
 
-.seconds_label.-inactive{
-  opacity:0;
+.seconds_label.-inactive {
+  opacity: 0;
   transform: translateX(-10px);
   pointer-events: none;
-
 }
-
 
 .form_btn {
   padding: 1rem;
@@ -290,47 +303,45 @@ margin-right: .5rem;
   font-size: 1.25em;
   cursor: pointer;
   border-radius: 0 0 10px 10px;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
-.form_btn:hover{
-  text-shadow: 0 3px 4px  rgba(0, 0, 0, 0.13);
+.form_btn:hover {
+  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.13);
   filter: drop-shadow(0 0 10px rgba(232, 62, 62, 0.5));
   transform: translateY(-1px);
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
 }
 
-
 .loading_icon {
   animation: rotate 3s linear infinite;
 }
 
-.error_title{
+.error_title {
   font-size: 2em;
   font-weight: var(--bold);
   text-align: center;
   margin-bottom: 2rem;
-
 }
 
-.error_message_wrap{
-  background:white;
+.error_message_wrap {
+  background: white;
   border-radius: 5px;
-  padding:.75rem;
-  margin:.5rem 2rem 
+  padding: 0.75rem;
+  margin: 0.5rem 2rem;
 }
 
-.error_message{
-  color:rgb(74 2 2);
+.error_message {
+  color: rgb(74 2 2);
 }
 
-.error_message::before{
-  content:"⚠ ";
-  font-size:1.25em;
+.error_message::before {
+  content: "⚠ ";
+  font-size: 1.25em;
 }
 
-.error_default{
-  margin:1rem 2rem 
+.error_default {
+  margin: 1rem 2rem;
 }
 
 @keyframes rotate {
@@ -380,9 +391,35 @@ main {
   grid-row: 2/4;
 }
 
-.news.-full_height{
+.news.-scrollable{
+  overflow-x: scroll;
+  transition:none;
+}
+
+
+.temp-news__wrap.-scrollable{
+  top:0;
+  overflow-y: scroll;
+  transition: none;
+}
+
+.news.-full_height {
   grid-row: 1/4;
 }
+
+.news_wrap {
+  position: relative;
+}
+
+/* .news.-scrollable{
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  cursor:grab;
+}
+
+.news.-scrollable > .news__article{
+  scroll-snap-align: start;
+} */
 
 .temp-news {
   grid-column: 4/5;
@@ -406,7 +443,7 @@ main {
   display: grid;
   grid-auto-rows: 33.33333333333333%;
 
-  transition: all 1s ease;
+  transition: all 0.5s ease;
 }
 
 .temp-news__container {
@@ -429,13 +466,9 @@ main {
 .news__article {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 100%;
-
   padding: 2rem;
-
-  transition: all 1s ease;
+  position: absolute;
+  transition: left 0.5s ease;
 }
 
 .news__article.-first {
@@ -480,7 +513,7 @@ main {
 .date {
   grid-column: 2/3;
   grid-row: 3/4;
-  text-align: left;
+  text-align: right;
 }
 
 .time {
@@ -506,13 +539,12 @@ main {
   white-space: nowrap;
 }
 
-
 @media only screen and (max-width: 1150px) {
   .temp-news {
-   display: none;
+    display: none;
   }
 
-  .news{
+  .news {
     grid-column: 1/5;
   }
 }

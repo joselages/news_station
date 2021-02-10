@@ -17,7 +17,7 @@ var news = {
     var self = this;
 
     $(".js-news").empty();
-    $(".js-tempNews").css("top", "-33.33333333333333%").empty();
+    $(".js-tempNews").empty();
     self.news = "";
 
     fetch(
@@ -32,16 +32,15 @@ var news = {
 
     if (self.reload) {
       setTimeout(function () {
-        console.log("aqui2");
         self.slider();
         goToMainScreen();
-      },1000);
+      }, 1000);
     }
 
     self.news.items.forEach(function (el, idx) {
       if (el !== "") {
         var mainTemplate = `
-        <article class="news__article ${idx === 0 ? "-first" : ""}">
+        <article class="news__article" style="left:${100 * idx}%">
             <h2 class="article__title">${el.title}</h2>
             <p class="article__txt">${el.description}</p>
             <small class="article__small">${el.pubDate}</small>
@@ -60,16 +59,36 @@ var news = {
       }
     });
   },
+  scroll: function () {
+    $(".js-news").addClass("-scrollable");
+  },
+  // sliderConfig: {
+  //   autoplay: true,
+  //   autoplaySpeed: 15000,
+  //   arrows: false,
+  //   useTransform: false,
+  //   draggable: false,
+  //   focusOnSelect: false,
+  //   infinite: false,
+  //   swipeToSlide: true,
+  // },
   slider: function () {
+    var self = this;
+
+    if (form.data.userWants === "slider") {
+      self.sliderAuto();
+      return;
+    }
+  },
+  sliderAuto: function () {
     var self = this;
     var newsLength = $(".js-news").find(".news__article").length;
     var idxAtual = 0;
-    var idxNext;
-
-    console.log("slider");
+    var idxNext = 0;
 
     var interval = setInterval(function () {
       idxNext = idxAtual + 1;
+
       if (newsLength - 1 === idxAtual) {
         self.reload = true;
 
@@ -77,16 +96,15 @@ var news = {
         showModalScreen();
         news.getNews();
         clearInterval(interval);
-        console.log("aqui1");
         return;
       } else {
         //main news
-        $(".news__article").eq(idxAtual).css("left", "-100%");
-        $(".news__article").eq(idxNext).css("left", "0");
-        $(".js-tempNews").css("top", 33.33333333333333 * (idxNext + 1) * -1 + "%");
+        //$(".news__article").eq(idxAtual).css("left", "-100%");
+        $(".js-news").css("left", -100 * idxNext + "%");
+        $(".js-tempNews").css("top", -33.33333333333333 * (idxNext + 1) + "%");
       }
       idxAtual++;
-    }, 25000);
+    }, form.data.seconds);
   },
   init: function () {
     var self = this;
@@ -111,15 +129,16 @@ var temperature = {
     $.ajax({
       url: weatherApiUrl,
       success: function (result) {
-        console.log(result);
         $(".js-temperature").append(`
                     <p class="temperature__degrees">${parseInt(
                       result.main.temp
                     )}ºC</p>
                     <p class="temperature__city">${result.name}</p>
                 `);
-        news.slider();
-        goToMainScreen();
+        if (form.error === false) {
+          news.slider();
+          goToMainScreen();
+        }
       },
     });
   },
@@ -161,7 +180,7 @@ var date = {
     var monthOfYear = self.months[now.getMonth()];
     var year = now.getFullYear();
 
-    var fullDate = `${dayOfWeek}, ${dayOfMonth} de ${monthOfYear} ${year}`;
+    var fullDate = `${dayOfWeek},<br> ${dayOfMonth} de ${monthOfYear} ${year}`;
 
     $(".js-time").html(hour + ":" + minutes);
     $(".js-date").html(fullDate);
@@ -178,24 +197,38 @@ var form = {
     $startScreen: $(".js-overlayScreen"),
     $button: $(".js-formBtn"),
     $errorModal: $(".js-errorModal"),
-    $errorMsg: $(".js-errorMsg"),
+    $errorMain: $(".js-errorMain"),
+    $errorConclusion: $(".js-errorConclusion"),
     $errorBtn: $(".js-errorBtn"),
-    $fakeRadioBtn: $('.js-fakeRadioBtn'),
-    $realRadioBtn: $('.js-radioBtn'),
-    $secondsSentence: $('.js-secondsLabel'),
-    $secondsInput:$('.js-secondsInput')
+    $fakeRadioBtn: $(".js-fakeRadioBtn"),
+    $realRadioBtn: $(".js-radioBtn"),
+    $secondsSentence: $(".js-secondsLabel"),
+    $secondsInput: $(".js-secondsInput"),
   },
   data: {
     msg: "",
+    userWants: "",
+    seconds: 15000,
   },
+  error: false,
   successLoc: function (position) {
     temperature.lat = position.coords.latitude;
     temperature.long = position.coords.longitude;
     temperature.init();
   },
-  errorLoc: function (error) {
+  showError: function (error) {
+    form.error = true;
     loading.hide();
-    form.elements.$errorMsg.html(error.message);
+    form.elements.$errorMain.html(error.message);
+
+    if (error.conclusion) {
+      form.elements.$errorConclusion.html(error.conclusion);
+    } else {
+      form.elements.$errorConclusion.html(
+        "A temperatura e localização não serão mostradas."
+      );
+    }
+
     console.error(error.message);
     form.elements.$errorModal.removeClass("-hidden");
   },
@@ -210,7 +243,34 @@ var form = {
     if (self.data.msg !== "") {
       self.elements.$displayMessage.html(self.data.msg);
     } else {
-      $(".js-news").addClass("-full_height");
+      $(".js-news").parent().addClass("-full_height");
+    }
+
+    //tipo de slider
+    self.data.userWants = form.elements.$realRadioBtn.filter(":checked").val();
+
+    if (self.data.userWants === "slider") {
+      let twoNumbersRegex = /^[0-9]{1,2}$/;
+      let inputedSeconds = self.elements.$secondsInput.val();
+      if (twoNumbersRegex.test(inputedSeconds)) {
+        inputedSeconds = parseInt(inputedSeconds);
+        if (inputedSeconds > 0 && inputedSeconds < 120) {
+          self.data.seconds = inputedSeconds * 1000;
+        } else {
+          self.showError({
+            message: "Valor inválido.",
+            conclusion: "O valor por defeito é de 15 segundos.",
+          });
+        }
+      } else {
+        self.showError({
+          message: "Valor inválido.",
+          conclusion: "O valor por defeito é de 15 segundos.",
+        });
+      }
+    } else {
+      $(".js-news").parent().addClass("-scrollable");
+      $(".js-tempNews").addClass("-scrollable");
     }
 
     //localizaçao e temperatura
@@ -220,19 +280,56 @@ var form = {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           self.successLoc,
-          self.errorLoc
+          self.showError
         );
       } else {
-        self.errorLoc({
-          error: "O seu browser não suporta a partilha de localização",
+        self.showError({
+          message: "O seu browser não suporta a partilha de localização",
         });
       }
     } else {
-      news.slider();
-      goToMainScreen();
+      if (self.error === false) {
+        news.slider();
+        goToMainScreen();
+      }
     }
   },
 };
+
+form.elements.$form.on("submit", function (e) {
+  e.preventDefault();
+  form.init();
+});
+
+form.elements.$errorBtn.on("click", function () {
+  form.error = false;
+  news.slider();
+  goToMainScreen();
+});
+
+form.elements.$fakeRadioBtn.on("change", function () {
+  $(this).addClass("-checked");
+  form.elements.$fakeRadioBtn.not($(this)).removeClass("-checked");
+
+  if ($(this).find(form.elements.$realRadioBtn).attr("value") === "slider") {
+    form.elements.$secondsSentence.removeClass("-inactive");
+    form.elements.$secondsInput.prop("disabled", false);
+  } else {
+    form.elements.$secondsSentence.addClass("-inactive");
+    form.elements.$secondsInput.prop("disabled", true);
+  }
+});
+
+form.elements.$realRadioBtn.on("focus", function () {
+  if (whatInput.ask() === "keyboard") {
+    $(this).parent().addClass("-focused");
+    //form.elements.$realRadioBtn.not($(this)).parent().removeClass("-focused");
+  }
+});
+
+form.elements.$realRadioBtn.on("focusout", function () {
+  $(this).parent().removeClass("-focused");
+});
 
 var loading = {
   $icon: $(".js-loadingIcon"),
@@ -259,35 +356,3 @@ function showModalScreen() {
   $(".js-mainContent").hide();
   form.elements.$startScreen.removeClass("-hidden");
 }
-
-form.elements.$form.on("submit", function (e) {
-  e.preventDefault();
-  form.init();
-});
-
-form.elements.$errorBtn.on("click", function () {
-  news.slider();
-  goToMainScreen();
-});
-
-
-form.elements.$fakeRadioBtn.on('click',function(){
-  $(this).addClass('-checked');
-  form.elements.$fakeRadioBtn.not($(this)).removeClass('-checked');
-
-  if($(this).attr('value') === 'slider'){
-    form.elements.$secondsSentence.removeClass('-inactive');
-    form.elements.$secondsInput.prop('disabled',false);
-    console.log('slider')
-  } else {
-    form.elements.$secondsSentence.addClass('-inactive');
-    form.elements.$secondsInput.prop('disabled',true);
-    console.log('scroll')
-  }
-});
-
-form.elements.$realRadioBtn.on('focus',function(){
-  form.elements.$realRadioBtn.parent().addClass('-focused');
-  form.elements.$realRadioBtn.not($(this)).parent().removeClass('-focused');
-});
-
