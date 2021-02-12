@@ -94,14 +94,16 @@ var news = {
 
         loading.show();
         showModalScreen();
+        $(".js-news").css("transform", 'translateX(0%)');
+        $(".js-tempNews").css("transform", 'translateY('+ (-100/3) + "%)");
         news.getNews();
         clearInterval(interval);
         return;
       } else {
         //main news
         //$(".news__article").eq(idxAtual).css("left", "-100%");
-        $(".js-news").css("left", -100 * idxNext + "%");
-        $(".js-tempNews").css("top", -33.33333333333333 * (idxNext + 1) + "%");
+        $(".js-news").css("transform", 'translateX('+ -100 * idxNext + "%)");
+        $(".js-tempNews").css("transform", 'translateY('+ (-100/3) * (idxNext + 1) + "%)");
       }
       idxAtual++;
     }, form.data.seconds);
