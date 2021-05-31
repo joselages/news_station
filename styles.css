@@ -10,7 +10,7 @@ https://glassmorphism.com/
   --normal: 400;
 
   --thumbBG: rgba(255, 255, 255, 0.85);
-  --scrollbarBG: trasparent;
+  --scrollbarBG: transparent;
 }
 
 *::-webkit-scrollbar {
@@ -103,6 +103,11 @@ body {
   }
 } */
 
+a {
+  color: rgb(241, 241, 241);
+  text-decoration: underline rgb(241, 241, 241);
+}
+
 .modal_overlay {
   width: 100%;
   height: 100%;
@@ -125,10 +130,45 @@ body {
   /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 
-.form {
+.form,
+.welcome {
   display: flex;
   flex-direction: column;
   min-width: 400px;
+  max-width: 500px;
+}
+
+.welcome_title {
+  font-size: 2.25em;
+  font-weight: var(--bold);
+}
+
+.welcome_title,
+.welcome_txt {
+  margin: 0.75rem 2rem 0 2rem;
+}
+
+.welcome_list {
+  margin: 0.75rem 2rem 1.75rem 2rem;
+}
+
+.welcome_list li {
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.welcome_list li:first-child:before {
+  content: "✏️";
+}
+
+.welcome_list li:last-child:before {
+  content: "⚙️";
+}
+
+.welcome_list li:before {
+  content: "📍";
+  position: absolute;
+  left: 0;
 }
 
 .form * {
@@ -158,8 +198,7 @@ body {
   opacity: 0.25;
 }
 
-.form_input:focus,
-.form_input:hover {
+.form_input:focus {
   outline: none;
   box-shadow: 0 0 0.5rem 1px white;
 }
@@ -193,7 +232,6 @@ body {
   font-size: 1.25em;
 }
 
-.checkbox_wrapper:hover > .custom-checkbox,
 .form_checkbox:focus ~ .custom-checkbox {
   box-shadow: 0 0 0.5rem 1px white;
   opacity: 1;
@@ -236,7 +274,6 @@ body {
   margin-right: 0.5rem;
 }
 
-.radio_wrapper:hover,
 .radio_wrapper.-focused {
   box-shadow: 0 0 0.5rem white;
   opacity: 1;
@@ -290,7 +327,8 @@ body {
   pointer-events: none;
 }
 
-.form_btn {
+.form_btn,
+.welcome_btn {
   padding: 1rem;
   background-image: radial-gradient(
     farthest-corner at 0% 100%,
@@ -308,13 +346,6 @@ body {
   cursor: pointer;
   border-radius: 0 0 10px 10px;
   transition: all 0.2s ease;
-}
-
-.form_btn:hover {
-  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.13);
-  filter: drop-shadow(0 0 10px rgba(232, 62, 62, 0.5));
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
 }
 
 .loading_icon {
@@ -505,9 +536,6 @@ main {
   margin: 1rem 2rem;
 }
 
-.temperature {
-}
-
 .temperature__degrees {
   font-size: 2em;
 }
@@ -601,7 +629,8 @@ main {
     width: 90%;
   }
 
-  .form {
+  .form,
+  .welcome {
     min-width: 100%;
   }
 
@@ -618,11 +647,38 @@ main {
     margin: 0.5rem 1rem;
   }
 
-  .msg{
+  .msg {
     display: flex;
   }
 
-  .msg_text{
+  .msg_text {
     margin-top: auto;
+  }
+}
+
+@media (hover: hover) {
+  .form_input:hover {
+    outline: none;
+    box-shadow: 0 0 0.5rem 1px white;
+  }
+
+  .form_btn:hover,
+  .welcome_btn:hover {
+    text-shadow: 0 3px 4px rgba(0, 0, 0, 0.13);
+    filter: drop-shadow(0 0 10px rgba(232, 62, 62, 0.5));
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .radio_wrapper:hover,
+  .radio_wrapper.-focused {
+    box-shadow: 0 0 0.5rem white;
+    opacity: 1;
+  }
+
+  .checkbox_wrapper:hover > .custom-checkbox,
+  .form_checkbox:focus ~ .custom-checkbox {
+    box-shadow: 0 0 0.5rem 1px white;
+    opacity: 1;
   }
 }

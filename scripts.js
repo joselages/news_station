@@ -94,16 +94,19 @@ var news = {
 
         loading.show();
         showModalScreen();
-        $(".js-news").css("transform", 'translateX(0%)');
-        $(".js-tempNews").css("transform", 'translateY('+ (-100/3) + "%)");
+        $(".js-news").css("transform", "translateX(0%)");
+        $(".js-tempNews").css("transform", "translateY(" + -100 / 3 + "%)");
         news.getNews();
         clearInterval(interval);
         return;
       } else {
         //main news
         //$(".news__article").eq(idxAtual).css("left", "-100%");
-        $(".js-news").css("transform", 'translateX('+ -100 * idxNext + "%)");
-        $(".js-tempNews").css("transform", 'translateY('+ (-100/3) * (idxNext + 1) + "%)");
+        $(".js-news").css("transform", "translateX(" + -100 * idxNext + "%)");
+        $(".js-tempNews").css(
+          "transform",
+          "translateY(" + (-100 / 3) * (idxNext + 1) + "%)"
+        );
       }
       idxAtual++;
     }, form.data.seconds);
@@ -191,6 +194,8 @@ var date = {
 
 var form = {
   elements: {
+    $welcomeMsg: $('.js-welcomeMsg'),
+    $welcomeBtn:$('.js-letsStart'),
     $checkbox: $(".js-locCheck"),
     $formModal: $(".js-formModal"),
     $form: $(".js-startForm"),
@@ -358,3 +363,8 @@ function showModalScreen() {
   $(".js-mainContent").hide();
   form.elements.$startScreen.removeClass("-hidden");
 }
+
+form.elements.$welcomeBtn.on("click", () => {
+  form.elements.$welcomeMsg.addClass('-hidden');
+  form.elements.$form.removeClass('-hidden');
+});
