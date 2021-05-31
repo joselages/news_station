@@ -6,8 +6,6 @@ $(document).ready(function () {
   }, 1000);
 });
 
-/* https://cors-anywhere.herokuapp.com/ */
-/* https://eco.sapo.pt/wp-json/eco/v1/items */
 
 var news = {
   RSS_URL: "http://feeds.jn.pt/JN-Ultimas",

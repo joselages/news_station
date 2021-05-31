@@ -1,6 +1,6 @@
 # [News Station](https://joselag.es/news_station/) 📰
 
-As últimas notícias do [JN](https://www.jn.pt/apps-rss.html) para consultar rápidamente ou expôr no seu estabelecimento.
+As últimas notícias do [JN](https://www.jn.pt/apps-rss.html) para consultar rapidamente ou expôr no seu estabelecimento.
 Personalize a experiência:
 
 * Escolha uma mensagem para mostrar
