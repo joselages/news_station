@@ -28,3 +28,4 @@ Fui atrás da tendência de glassmorphism UI e pelo caminho, descobri uns truque
 * [slick](https://kenwheeler.github.io/slick/) - slider das notícias
 * [OpenWeather API](https://openweathermap.org/api) - API para informação de metereologia
 * [jQuery](https://jquery.com/)
+* [Meta Tags](https://metatags.io/) - SEO metatags generator
