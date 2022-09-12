@@ -24,6 +24,15 @@ var news = {
       .then((response) => response.json())
       .then((data) => self.populate(data));
   },
+  formatNewsDate(date){
+    const dateTxt = date.toLocaleDateString('pt-PT',{
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    const hourTxt = date.getHours()+'';
+    const minutesTxt = date.getMinutes()+'';
+
+    return hourTxt.padStart(2, '0')+':'+ minutesTxt.padStart(2, '0') + ' ' + dateTxt;
+  },
   populate: function (data) {
     var self = this;
     self.news = data.rss.channel.item;
@@ -37,12 +46,13 @@ var news = {
 
     self.news.forEach(function (el, idx) {
       if (el !== "") {
+        let newsDate = new Date(el.pubDate);
         var mainTemplate = `
         <article class="news__article" style="left:${100 * idx}%">
             <h2 class="article__title">${el.title}</h2>
             <p class="article__txt">${el.description ?? ''}</p>
             <div style="margin-top:2rem;">
-            <small class="article__small">${el.pubDate}</small>
+            <small class="article__small">${self.formatNewsDate(newsDate)}</small>
             <a class="article__link" href="${el.link}" target="_blank">Ler no JN</a>
             </div>
         </article>`;
