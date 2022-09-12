@@ -19,14 +19,14 @@ var news = {
     self.news = "";
 
     fetch(
-      `https://api.rss2json.com/v1/api.json?rss_url=${self.RSS_URL}&api_key=${config.RSS_CONVERTER_API_KEY}&count=30`
+      `https://api.factmaven.com/xml-to-json/?xml=http://feeds.jn.pt/JN-Ultimas`
     )
       .then((response) => response.json())
       .then((data) => self.populate(data));
   },
   populate: function (data) {
     var self = this;
-    self.news = data;
+    self.news = data.rss.channel.item;
 
     if (self.reload) {
       setTimeout(function () {
@@ -35,13 +35,16 @@ var news = {
       }, 1000);
     }
 
-    self.news.items.forEach(function (el, idx) {
+    self.news.forEach(function (el, idx) {
       if (el !== "") {
         var mainTemplate = `
         <article class="news__article" style="left:${100 * idx}%">
             <h2 class="article__title">${el.title}</h2>
-            <p class="article__txt">${el.description}</p>
+            <p class="article__txt">${el.description ?? ''}</p>
+            <div style="margin-top:2rem;">
             <small class="article__small">${el.pubDate}</small>
+            <a class="article__link" href="${el.link}" target="_blank">Ler no JN</a>
+            </div>
         </article>`;
 
         var tempTemplate = `
@@ -116,7 +119,7 @@ var news = {
 };
 
 var temperature = {
-  weatherKey: config.WEATHER_API_KEY,
+  weatherKey: WEATHER_API_KEY,
   lat: "",
   long: "",
   init: function () {

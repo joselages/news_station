@@ -537,6 +537,25 @@ main {
   margin-top: 1rem;
 }
 
+.article__link {
+  margin-top: 2rem;
+  margin-right: 2rem;
+  position: relative;
+}
+
+.article__link::before {
+  content: '';
+  width: 30px;
+  height: 30px;
+  background-image: url(../images/external_link_icon.svg);
+  background-size: contain;
+  position: absolute;
+  top: -3px;
+  right: -32px;
+  filter: invert(1);
+}
+
+
 .article__small {
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
