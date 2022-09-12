@@ -22,7 +22,7 @@ Fui atrás da tendência de glassmorphism UI e pelo caminho, descobri uns truque
 ## Recursos utilizados
 * [Glassmorphism CSS Generator](https://glassmorphism.com/) 
 * [RSS da Jornal de Notícias](http://feeds.jn.pt/JN-Ultimas) - RSS com as últimas notícias
-* [rss to json online converter](https://rss2json.com/) - conversor de XML para JSON
+* [factmaven/xml-to-json](https://github.com/factmaven/xml-to-json) - conversor de XML para JSON
 * [What Input?](https://ten1seven.github.io/what-input/) - usado para permitir navegar no formulário pelo teclado e os estilos serem aplicados aos elementos
 * [minireset.css](https://jgthms.com/minireset.css/) - CSS Reset
 * [slick](https://kenwheeler.github.io/slick/) - slider das notícias
