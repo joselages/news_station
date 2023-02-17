@@ -19,10 +19,12 @@ var news = {
     self.news = "";
 
     fetch(
-      `https://api.factmaven.com/xml-to-json/?xml=http://feeds.jn.pt/JN-Ultimas`
+      self.RSS_URL
     )
-      .then((response) => response.json())
-      .then((data) => self.populate(data));
+      .then(resp => resp.text())
+      .then(str => $.parseXML(str))
+      .then(xml => xmlToJson(xml))
+      .then(data => self.populate(data));
   },
   formatNewsDate(date){
     const dateTxt = date.toLocaleDateString('pt-PT',{
@@ -46,20 +48,20 @@ var news = {
 
     self.news.forEach(function (el, idx) {
       if (el !== "") {
-        let newsDate = new Date(el.pubDate);
+        let newsDate = new Date(el.pubDate['#text']);
         var mainTemplate = `
         <article class="news__article" style="left:${100 * idx}%">
-            <h2 class="article__title">${el.title}</h2>
-            <p class="article__txt">${el.description ?? ''}</p>
+            <h2 class="article__title">${el.title['#text']}</h2>
+            <p class="article__txt">${el.description['#text'] ?? ''}</p>
             <div style="margin-top:2rem;">
             <small class="article__small">${self.formatNewsDate(newsDate)}</small>
-            <a class="article__link" href="${el.link}" target="_blank">Ler no JN</a>
+            <a class="article__link" href="${el.link['#text']}" target="_blank">Ler no JN</a>
             </div>
         </article>`;
 
         var tempTemplate = `
         <div class="temp-news__container">
-            <h3 class="temp-news__title">${el.title}</h3>
+            <h3 class="temp-news__title">${el.title['#text']}</h3>
         </div>`;
 
         mainTemplate = $.parseHTML(mainTemplate);
