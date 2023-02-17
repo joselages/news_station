@@ -8,7 +8,7 @@ $(document).ready(function () {
 
 
 var news = {
-  RSS_URL: "http://feeds.jn.pt/JN-Ultimas",
+  RSS_URL: "https://rr.sapo.pt/rss/rssfeed.aspx?section=section_noticias",
   news: "",
   reload: false,
   getNews: function () {
@@ -55,7 +55,7 @@ var news = {
             <p class="article__txt">${el.description['#text'] ?? ''}</p>
             <div style="margin-top:2rem;">
             <small class="article__small">${self.formatNewsDate(newsDate)}</small>
-            <a class="article__link" href="${el.link['#text']}" target="_blank">Ler no JN</a>
+            <a class="article__link" href="${el.link['#text']}" target="_blank">Ler na RR</a>
             </div>
         </article>`;
 
