@@ -53,7 +53,7 @@ var news = {
         <article class="news__article" style="left:${100 * idx}%">
             <h2 class="article__title">${el.title['#text']}</h2>
             <p class="article__txt">${el.description['#text'] ?? ''}</p>
-            <div style="margin-top:2rem;">
+            <div class="article__details">
             <small class="article__small">${self.formatNewsDate(newsDate)}</small>
             <a class="article__link" href="${el.link['#text']}" target="_blank">Ler na RR</a>
             </div>
@@ -262,8 +262,6 @@ var form = {
     self.data.msg = self.elements.$msgInput.val().trim();
     if (self.data.msg !== "") {
       self.elements.$displayMessage.html(self.data.msg);
-    } else {
-      $(".js-news").parent().addClass("-full_height");
     }
 
     //tipo de slider
@@ -312,6 +310,11 @@ var form = {
         news.slider();
         goToMainScreen();
       }
+    }
+    
+    //se nao tiver checked e nao tiver mensagem
+    if(!isChecked && !self.data.msg){
+      $(".js-news").parent().addClass("-full_height");
     }
   },
 };
