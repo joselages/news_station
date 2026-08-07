@@ -589,6 +589,8 @@ main {
   grid-column: 2/3;
   grid-row: 3/4;
   text-align: right;
+  font-size: 0.75rem;
+  translate: 0 6px;
 }
 
 .time {

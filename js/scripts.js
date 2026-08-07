@@ -6,9 +6,9 @@ $(document).ready(function () {
   }, 1000);
 });
 
-
 var news = {
-  RSS_URL: "https://rr.sapo.pt/rss/rssfeed.aspx?section=section_noticias",
+  RSS_URL:
+    "https://api.rss2json.com/v1/api.json?rss_url=https://www.rtp.pt/noticias/rss/",
   news: "",
   reload: false,
   getNews: function () {
@@ -18,26 +18,32 @@ var news = {
     $(".js-tempNews").empty();
     self.news = "";
 
-    fetch(
-      self.RSS_URL
-    )
-      .then(resp => resp.text())
-      .then(str => $.parseXML(str))
-      .then(xml => xmlToJson(xml))
-      .then(data => self.populate(data));
+    fetch(self.RSS_URL)
+      .then((res) => res.json())
+      .then((data) => self.populate(data));
   },
-  formatNewsDate(date){
-    const dateTxt = date.toLocaleDateString('pt-PT',{
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  formatNewsDate(date) {
+    const dateTxt = date.toLocaleDateString("pt-PT", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
-    const hourTxt = date.getHours()+'';
-    const minutesTxt = date.getMinutes()+'';
+    const hourTxt = date.getHours() + "";
+    const minutesTxt = date.getMinutes() + "";
 
-    return hourTxt.padStart(2, '0')+':'+ minutesTxt.padStart(2, '0') + ' ' + dateTxt;
+    return (
+      hourTxt.padStart(2, "0") +
+      ":" +
+      minutesTxt.padStart(2, "0") +
+      " " +
+      dateTxt
+    );
   },
   populate: function (data) {
     var self = this;
-    self.news = data.rss.channel.item;
+    console.log(data);
+    self.news = data.items;
 
     if (self.reload) {
       setTimeout(function () {
@@ -48,20 +54,20 @@ var news = {
 
     self.news.forEach(function (el, idx) {
       if (el !== "") {
-        let newsDate = new Date(el.pubDate['#text']);
+        let newsDate = new Date(el.pubDate);
         var mainTemplate = `
         <article class="news__article" style="left:${100 * idx}%">
-            <h2 class="article__title">${el.title['#text']}</h2>
-            <p class="article__txt">${el.description['#text'] ?? ''}</p>
+            <h2 class="article__title">${el.title}</h2>
+            <p class="article__txt">${el.description ?? ""}</p>
             <div class="article__details">
             <small class="article__small">${self.formatNewsDate(newsDate)}</small>
-            <a class="article__link" href="${el.link['#text']}" target="_blank">Ler na RR</a>
+            <a class="article__link" href="${el.link}" target="_blank">Ler na RTP</a>
             </div>
         </article>`;
 
         var tempTemplate = `
         <div class="temp-news__container">
-            <h3 class="temp-news__title">${el.title['#text']}</h3>
+            <h3 class="temp-news__title">${el.title}</h3>
         </div>`;
 
         mainTemplate = $.parseHTML(mainTemplate);
@@ -118,7 +124,7 @@ var news = {
         $(".js-news").css("transform", "translateX(" + -100 * idxNext + "%)");
         $(".js-tempNews").css(
           "transform",
-          "translateY(" + (-100 / 3) * (idxNext + 1) + "%)"
+          "translateY(" + (-100 / 3) * (idxNext + 1) + "%)",
         );
       }
       idxAtual++;
@@ -149,7 +155,7 @@ var temperature = {
       success: function (result) {
         $(".js-temperature").append(`
                     <p class="temperature__degrees">${parseInt(
-                      result.main.temp
+                      result.main.temp,
                     )}ºC</p>
                     <p class="temperature__city">${result.name}</p>
                 `);
@@ -198,7 +204,7 @@ var date = {
     var monthOfYear = self.months[now.getMonth()];
     var year = now.getFullYear();
 
-    var fullDate = `${dayOfWeek},<br> ${dayOfMonth} de ${monthOfYear} ${year}`;
+    var fullDate = `${dayOfWeek}, ${dayOfMonth} de ${monthOfYear} ${year}`;
 
     $(".js-time").html(hour + ":" + minutes);
     $(".js-date").html(fullDate);
@@ -207,8 +213,8 @@ var date = {
 
 var form = {
   elements: {
-    $welcomeMsg: $('.js-welcomeMsg'),
-    $welcomeBtn:$('.js-letsStart'),
+    $welcomeMsg: $(".js-welcomeMsg"),
+    $welcomeBtn: $(".js-letsStart"),
     $checkbox: $(".js-locCheck"),
     $formModal: $(".js-formModal"),
     $form: $(".js-startForm"),
@@ -245,7 +251,7 @@ var form = {
       form.elements.$errorConclusion.html(error.conclusion);
     } else {
       form.elements.$errorConclusion.html(
-        "A temperatura e localização não serão mostradas."
+        "A temperatura e localização não serão mostradas.",
       );
     }
 
@@ -298,7 +304,7 @@ var form = {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           self.successLoc,
-          self.showError
+          self.showError,
         );
       } else {
         self.showError({
@@ -311,9 +317,9 @@ var form = {
         goToMainScreen();
       }
     }
-    
+
     //se nao tiver checked e nao tiver mensagem
-    if(!isChecked && !self.data.msg){
+    if (!isChecked && !self.data.msg) {
       $(".js-news").parent().addClass("-full_height");
     }
   },
@@ -381,6 +387,6 @@ function showModalScreen() {
 }
 
 form.elements.$welcomeBtn.on("click", () => {
-  form.elements.$welcomeMsg.addClass('-hidden');
-  form.elements.$form.removeClass('-hidden');
+  form.elements.$welcomeMsg.addClass("-hidden");
+  form.elements.$form.removeClass("-hidden");
 });
